@@ -40,12 +40,6 @@ buttonFont = pygame.font.SysFont('rubik', 46)
 # Defining win/loss font
 statusFont = pygame.font.SysFont('rubikbold', 96)
 
-# importing assets
-beforecat = pygame.image.load("assets/preroll.png")
-rollcat = pygame.image.load("assets/rollcat.png")
-
-
-
 
 # Draws text using parameters passed
 def text_on_screen(msg, font, colour, surface, x, y):
@@ -56,6 +50,7 @@ def text_on_screen(msg, font, colour, surface, x, y):
 
 def main_menu():
     pygame.display.set_caption("High Rollers")
+    click = False
     while True:
         
         # Fill screen with designated background colour
@@ -89,7 +84,6 @@ def main_menu():
         text_on_screen('quit', buttonFont, linen, screen, ((width/7)+300+width/7), (height/2)+25)
 
      
-        click = False
         for ev in pygame.event.get():
             if ev.type == pygame.QUIT:
                 pygame.quit()
@@ -108,11 +102,12 @@ def main_menu():
        
 # Generates the rectangle across the bottom of the screen
 def tableGen():
-    table = pygame.Rect(0, height-300, width, 400)
+    table = pygame.Rect(0, height-250, width, 400)
     pygame.draw.rect(screen, brown, table)
 
 
 def gameTime():
+    click = False
     running = True
     while running:
         # Fill screen with designated background colour
@@ -120,7 +115,8 @@ def gameTime():
 
         #render in mr catto and table here
         pregame = pygame.image.load("assets/preroll.png").convert_alpha()
-        screen.blit(pregame , (25, 30))
+        pregame = pygame.transform.scale(pregame, (400, 450))
+        screen.blit(pregame, ((width/4),(height/2)-325))
         tableGen()
         pygame.display.flip()
 
@@ -139,7 +135,6 @@ def gameTime():
             pygame.draw.rect(screen, red, rollButton)
         text_on_screen('ROLL', buttonFont, linen, screen, (width/3)+115, (height-90))
 
-        click = False
         for ev in pygame.event.get():
             if ev.type == pygame.QUIT:
                 pygame.quit()
@@ -199,9 +194,13 @@ def displayDice(die1, die2):
     elif die2 == 6:
         userRoll = pygame.image.load("assets/r6.png").convert_alpha()
     
+    # resize dice
+    userRoll = pygame.transform.scale(userRoll, (80, 80))
+    compRoll = pygame.transform.scale(compRoll, (80, 80))
+
     # display user and computer dice
-    screen.blit(compRoll, ((width/5)+8, (height/2)-60))
-    screen.blit(userRoll, ((width/4)+95, (height/2)-10))
+    screen.blit(userRoll, ((width/2)+45, (height/2)+200))
+    screen.blit(compRoll, ((width/4)+105, (height/2)+150))
     pygame.display.flip()
 
 
@@ -212,21 +211,25 @@ def gameLogic():
     die1 = (secrets.randbelow(5)+1) #computer roll
     die2 = (secrets.randbelow(5)+1) #user roll
 
+    dust_clear_event = pygame.USEREVENT + 1
+    pygame.time.set_timer(dust_clear_event, 3000)
+
     while running:
+        # Fill screen with designated background colour
+        screen.fill(backgroundC)
         # render rolly cat and table
         rollcat = pygame.image.load("assets/rollcat.png").convert_alpha()
-        screen.blit(rollcat , ((width/2), (height/2)))
+        rollcat = pygame.transform.scale(rollcat, (400, 450))
+        screen.blit(rollcat, ((width/4),(height/2)-325))
         tableGen()
 
         # show dust for rolling and make it wiggle if i can
         dust = pygame.image.load("assets/dust.png").convert_alpha()
-        screen.blit(dust, ((width/2), (height/2)))
+        dust = pygame.transform.scale(dust, (300, 300))
+        screen.blit(dust, ((width/4)+5, (height/2)+50))
 
         # maybe rolling dice sound?
         pygame.display.flip()
-        # Dust on screen for 5 seconds
-        CLEARDUST = USEREVENT + 1
-        pygame.time.set_timer(CLEARDUST, 5000)
 
         for ev in pygame.event.get():
             if ev.type == pygame.QUIT:
@@ -235,7 +238,7 @@ def gameLogic():
             if ev.type == KEYDOWN:
                 if ev.key == K_ESCAPE:
                     running = False
-            if ev.type == CLEARDUST:
+            if ev.type == dust_clear_event:
                 # Once dust can clear, navigate to next screen for victory/loss/draw
                 winner = checkWinner(die1, die2)
 
@@ -253,26 +256,47 @@ def gameLogic():
 def winScreen(die1, die2):
     computer = die1
     user = die2
+    click = False
 
     running = True
     while running:
         screen.fill(backgroundC)
 
-
-        wincat = pygame.image.load("assets/wincat.png").convert_alpha()
+        losecat = pygame.image.load("assets/losecat.png").convert_alpha()
+        losecat = pygame.transform.scale(losecat, (400, 450))
         #display cat
-        screen.blit(wincat, width/2, (height/2))
+        screen.blit(losecat, ((width/4),(height/2)-325))
         
-        #display table
+        #display table and dice
         tableGen()
-
         displayDice(computer, user)
-        pygame.display.flip()
-        pygame.time.wait(2000)
 
-        text_on_screen('WIN! :)', titleFont, green, screen, (width/2), 30)
-
+        text_on_screen('WIN! :)', statusFont, green, screen, (width/2), 30)
+        
         mx, my = pygame.mouse.get_pos()
+
+        againButton = pygame.Rect(width/7, (height-70), 225, 50)
+        quitButton = pygame.Rect(width/7+300, (height-70), 225, 50)
+        pygame.draw.rect(screen, green, againButton)
+        pygame.draw.rect(screen, red, quitButton)
+
+        
+        if againButton.collidepoint((mx, my)):
+            pygame.draw.rect(screen, dGreen, againButton)
+            if click:
+                gameTime()
+        else:
+            pygame.draw.rect(screen, green, againButton)
+        text_on_screen('replay', buttonFont, linen, screen, (width/7)+115, (height-75))
+
+        if quitButton.collidepoint((mx, my)):
+            pygame.draw.rect(screen, dRed, quitButton)
+            if click:
+                pygame.quit()
+                sys.exit()
+        else:
+            pygame.draw.rect(screen, red, quitButton)
+        text_on_screen('quit', buttonFont, linen, screen, (width/7)+415, (height-75))
 
         for ev in pygame.event.get():
             if ev.type == pygame.QUIT:
@@ -291,6 +315,7 @@ def winScreen(die1, die2):
         mainClock.tick(60)
 
 def loseScreen(die1, die2):
+    click = False
     computer = die1
     user = die2
 
@@ -298,20 +323,37 @@ def loseScreen(die1, die2):
     while running:
         screen.fill(backgroundC)
 
-        
-        losecat = pygame.image.load("assets/losecat.png").convert_alpha()
+        againButton = pygame.Rect(width/7, (height-70), 225, 50)
+        quitButton = pygame.Rect(width/7+300, (height-70), 225, 50)
+
+        wincat = pygame.image.load("assets/wincat.png").convert_alpha()
+        wincat = pygame.transform.scale(wincat, (400, 450))
         #display cat
-        screen.blit(losecat, width/2, (height/2))
+        screen.blit(wincat, ((width/4),(height/2)-325))
 
-        # display table
+        # display table and dice
         tableGen()
-
         displayDice(computer, user)
-        pygame.display.flip()
-        pygame.time.wait(2000)
-        text_on_screen('LOSE! :(', titleFont, red, screen, (width/2), 30)
+        text_on_screen('LOSE! :(', statusFont, red, screen, (width/2), 30)
 
         mx, my = pygame.mouse.get_pos()
+
+        if againButton.collidepoint((mx, my)):
+            pygame.draw.rect(screen, dGreen, againButton)
+            if click:
+                gameTime()
+        else:
+            pygame.draw.rect(screen, green, againButton)
+        text_on_screen('replay', buttonFont, linen, screen, (width/7)+115, (height-75))
+
+        if quitButton.collidepoint((mx, my)):
+            pygame.draw.rect(screen, dRed, quitButton)
+            if click:
+                pygame.quit()
+                sys.exit()
+        else:
+            pygame.draw.rect(screen, red, quitButton)
+        text_on_screen('quit', buttonFont, linen, screen, (width/7)+415, (height-75))
 
         for ev in pygame.event.get():
             if ev.type == pygame.QUIT:
@@ -331,26 +373,44 @@ def loseScreen(die1, die2):
         mainClock.tick(60)
 
 def drawScreen(die1):
+    click = False
     roll = die1
 
     running = True
     while running:
         screen.fill(backgroundC)
 
+        againButton = pygame.Rect(width/7, (height-70), 225, 50)
+        quitButton = pygame.Rect(width/7+300, (height-70), 225, 50)
+
         #render in mr catto, dice, and table here
         drawcat = pygame.image.load("assets/draw.png").convert_alpha()
-        screen.blit(drawcat, width/2, (height/2))
+        drawcat = pygame.transform.scale(drawcat, (400, 450))
+        screen.blit(drawcat, ((width/4),(height/2)-325))
 
         #render in table
         tableGen()
 
         displayDice(roll, roll)
-
-        pygame.display.flip()
-        pygame.time.wait(2000)
-        text_on_screen('DRAW!', titleFont, red, screen, (width/2), 30)
-
+        text_on_screen('DRAW!', statusFont, red, screen, (width/2), 30)
         mx, my = pygame.mouse.get_pos()
+
+        if againButton.collidepoint((mx, my)):
+            pygame.draw.rect(screen, dGreen, againButton)
+            if click:
+                gameTime()
+        else:
+            pygame.draw.rect(screen, green, againButton)
+        text_on_screen('replay', buttonFont, linen, screen, (width/7)+115, (height-75))
+
+        if quitButton.collidepoint((mx, my)):
+            pygame.draw.rect(screen, dRed, quitButton)
+            if click:
+                pygame.quit()
+                sys.exit()
+        else:
+            pygame.draw.rect(screen, red, quitButton)
+        text_on_screen('quit', buttonFont, linen, screen, (width/7)+415, (height-75))
 
         for ev in pygame.event.get():
             if ev.type == pygame.QUIT:
