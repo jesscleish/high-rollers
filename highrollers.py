@@ -8,13 +8,14 @@ mainClock = pygame.time.Clock()
 
 from pygame.locals import *
 pygame.init()
+pygame.font.init()
+pygame.mixer.init()
 
 # set screen resolution
 resolution = (725,725)
 
 # open a screen of above resolution
 screen = pygame.display.set_mode(resolution)
-
 
 # defining palette colours
 backgroundC = (252, 222, 190)
@@ -158,7 +159,7 @@ def checkWinner(roll1, roll2):
     elif(roll1 < roll2):    # User wins
         return 1
 
-    elif(roll1 == roll2): #Draw
+    elif(roll1 == roll2): # Draw
         return 2
 
     else:
@@ -201,7 +202,7 @@ def displayDice(die1, die2):
     # display user and computer dice
     screen.blit(userRoll, ((width/2)+45, (height/2)+200))
     screen.blit(compRoll, ((width/4)+105, (height/2)+150))
-    pygame.display.flip()
+    pygame.display.update()
 
 
 # generate rolls, next screen navigation
@@ -212,11 +213,17 @@ def gameLogic():
     die2 = (secrets.randbelow(5)+1) #user roll
 
     dust_clear_event = pygame.USEREVENT + 1
-    pygame.time.set_timer(dust_clear_event, 3000)
+    pygame.time.set_timer(dust_clear_event, 2000)
+    
+    # sound effect for rolling dice
+    diceroll = pygame.mixer.Sound("sounds/diceroll.wav")
+    pygame.mixer.Sound.play(diceroll)
 
     while running:
         # Fill screen with designated background colour
         screen.fill(backgroundC)
+
+
         # render rolly cat and table
         rollcat = pygame.image.load("assets/rollcat.png").convert_alpha()
         rollcat = pygame.transform.scale(rollcat, (400, 450))
@@ -257,6 +264,11 @@ def winScreen(die1, die2):
     computer = die1
     user = die2
     click = False
+
+    # sound effect for win
+    winsound = pygame.mixer.Sound("sounds/trumpetwin.mp3")
+    pygame.mixer.Sound.play(winsound)
+
 
     running = True
     while running:
@@ -319,6 +331,10 @@ def loseScreen(die1, die2):
     computer = die1
     user = die2
 
+    # sound effect for lose
+    losesound = pygame.mixer.Sound("sounds/losetrombone.wav")
+    pygame.mixer.Sound.play(losesound)
+
     running = True
     while running:
         screen.fill(backgroundC)
@@ -376,6 +392,8 @@ def drawScreen(die1):
     click = False
     roll = die1
 
+    drawsound = pygame.mixer.Sound("sounds/angrycat.mp3")
+    pygame.mixer.Sound.play(drawsound)
     running = True
     while running:
         screen.fill(backgroundC)
