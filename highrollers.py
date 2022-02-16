@@ -40,6 +40,12 @@ buttonFont = pygame.font.SysFont('rubik', 46)
 # Defining win/loss font
 statusFont = pygame.font.SysFont('rubikbold', 96)
 
+# importing assets
+beforecat = pygame.image.load("assets/preroll.png")
+rollcat = pygame.image.load("assets/rollcat.png")
+
+
+
 
 # Draws text using parameters passed
 def text_on_screen(msg, font, colour, surface, x, y):
@@ -51,7 +57,7 @@ def text_on_screen(msg, font, colour, surface, x, y):
 def main_menu():
     pygame.display.set_caption("High Rollers")
     while True:
-
+        
         # Fill screen with designated background colour
         screen.fill(backgroundC)
         text_on_screen('HIGH ROLLERS', titleFont, black, screen, (width/2), 100)
@@ -60,7 +66,6 @@ def main_menu():
 
         playButton = pygame.Rect(width/7, (height/2), 200, 100)
         quitButton = pygame.Rect(((width/7)+200+width/7), (height/2), 200, 100)
-
 
         # Hover on buttons
         if playButton.collidepoint((mx, my)):
@@ -101,6 +106,11 @@ def main_menu():
         pygame.display.update()
         mainClock.tick(60)
        
+# Generates the rectangle across the bottom of the screen
+def tableGen():
+    table = pygame.Rect(0, height-300, width, 400)
+    pygame.draw.rect(screen, brown, table)
+
 
 def gameTime():
     running = True
@@ -109,7 +119,10 @@ def gameTime():
         screen.fill(backgroundC)
 
         #render in mr catto and table here
-
+        pregame = pygame.image.load("assets/preroll.png").convert_alpha()
+        screen.blit(pregame , (25, 30))
+        tableGen()
+        pygame.display.flip()
 
         text_on_screen('LETS ROLL!', titleFont, yellow, screen, (width/2), 30)
 
@@ -142,20 +155,75 @@ def gameTime():
         pygame.display.update()
         mainClock.tick(60)
 
-# generate rolls and navigate to appropriate screen accordingly
+
+def checkWinner(roll1, roll2):
+    if (roll1 > roll2): # Computer wins
+        return 0
+
+    elif(roll1 < roll2):    # User wins
+        return 1
+
+    elif(roll1 == roll2): #Draw
+        return 2
+
+    else:
+        pygame.quit() #fatal error
+        sys.exit()
+
+
+def displayDice(die1, die2):
+    if die1 == 1:
+        compRoll = pygame.image.load("assets/b1.png").convert_alpha()
+    elif die1 == 2:
+        compRoll = pygame.image.load("assets/b2.png").convert_alpha()
+    elif die1 == 3:
+        compRoll = pygame.image.load("assets/b3.png").convert_alpha()
+    elif die1 == 4:
+        compRoll = pygame.image.load("assets/b4.png").convert_alpha()
+    elif die1 == 5:
+        compRoll = pygame.image.load("assets/b5.png").convert_alpha()
+    elif die1 == 6:
+        compRoll = pygame.image.load("assets/b6.png").convert_alpha()
+
+                
+    if die2 == 1:
+        userRoll = pygame.image.load("assets/r1.png").convert_alpha()
+    elif die2 == 2:
+        userRoll = pygame.image.load("assets/r2.png").convert_alpha()
+    elif die2 == 3:
+        userRoll = pygame.image.load("assets/r3.png").convert_alpha()
+    elif die2 == 4:
+        userRoll = pygame.image.load("assets/r4.png").convert_alpha()  
+    elif die2 == 5:
+        userRoll = pygame.image.load("assets/r5.png").convert_alpha()
+    elif die2 == 6:
+        userRoll = pygame.image.load("assets/r6.png").convert_alpha()
+    
+    # display user and computer dice
+    screen.blit(compRoll, ((width/5)+8, (height/2)-60))
+    screen.blit(userRoll, ((width/4)+95, (height/2)-10))
+    pygame.display.flip()
+
+
+# generate rolls, next screen navigation
 def gameLogic():
 
     running = True
+    die1 = (secrets.randbelow(5)+1) #computer roll
+    die2 = (secrets.randbelow(5)+1) #user roll
+
     while running:
         # render rolly cat and table
+        rollcat = pygame.image.load("assets/rollcat.png").convert_alpha()
+        screen.blit(rollcat , ((width/2), (height/2)))
+        tableGen()
 
         # show dust for rolling and make it wiggle if i can
+        dust = pygame.image.load("assets/dust.png").convert_alpha()
+        screen.blit(dust, ((width/2), (height/2)))
 
         # maybe rolling dice sound?
-
-        roll1 = (secrets.randbelow(5)+1) #computer roll
-        roll2 = (secrets.randbelow(5)+1) #user roll
-
+        pygame.display.flip()
         # Dust on screen for 5 seconds
         CLEARDUST = USEREVENT + 1
         pygame.time.set_timer(CLEARDUST, 5000)
@@ -168,39 +236,41 @@ def gameLogic():
                 if ev.key == K_ESCAPE:
                     running = False
             if ev.type == CLEARDUST:
-                
                 # Once dust can clear, navigate to next screen for victory/loss/draw
-                if (roll1 > roll2):
-                    loseScreen(roll1, roll2)
-                    return 0
+                winner = checkWinner(die1, die2)
 
-                elif(roll1 < roll2):
-                    winScreen(roll1, roll2)
-                    return 1
-
-                elif(roll1 == roll2):
-                    drawScreen(roll1)
-                    return 2
-
+                if winner == 0:
+                    loseScreen(die1, die2)
+                elif winner == 1:
+                    winScreen(die1, die2)
                 else:
-                    pygame.quit() #fatal error
-                    sys.exit()
-
-        
+                    drawScreen(die1)
 
     pygame.display.update()
     mainClock.tick(60)
 
 
-def winScreen(compRoll, userRoll):
+def winScreen(die1, die2):
+    computer = die1
+    user = die2
+
     running = True
     while running:
         screen.fill(backgroundC)
 
-        #render in mr catto, dice and table here
 
+        wincat = pygame.image.load("assets/wincat.png").convert_alpha()
+        #display cat
+        screen.blit(wincat, width/2, (height/2))
+        
+        #display table
+        tableGen()
 
-        text_on_screen('WIN!', titleFont, green, screen, (width/2), 30)
+        displayDice(computer, user)
+        pygame.display.flip()
+        pygame.time.wait(2000)
+
+        text_on_screen('WIN! :)', titleFont, green, screen, (width/2), 30)
 
         mx, my = pygame.mouse.get_pos()
 
@@ -220,15 +290,26 @@ def winScreen(compRoll, userRoll):
         pygame.display.update()
         mainClock.tick(60)
 
-def loseScreen(compRoll, userRoll):
+def loseScreen(die1, die2):
+    computer = die1
+    user = die2
+
     running = True
     while running:
         screen.fill(backgroundC)
 
-        #render in mr catto, dice and table here
+        
+        losecat = pygame.image.load("assets/losecat.png").convert_alpha()
+        #display cat
+        screen.blit(losecat, width/2, (height/2))
 
+        # display table
+        tableGen()
 
-        text_on_screen('LOSE!', titleFont, red, screen, (width/2), 30)
+        displayDice(computer, user)
+        pygame.display.flip()
+        pygame.time.wait(2000)
+        text_on_screen('LOSE! :(', titleFont, red, screen, (width/2), 30)
 
         mx, my = pygame.mouse.get_pos()
 
@@ -249,14 +330,24 @@ def loseScreen(compRoll, userRoll):
         pygame.display.update()
         mainClock.tick(60)
 
-def drawScreen(roll):
+def drawScreen(die1):
+    roll = die1
+
     running = True
     while running:
         screen.fill(backgroundC)
 
         #render in mr catto, dice, and table here
+        drawcat = pygame.image.load("assets/draw.png").convert_alpha()
+        screen.blit(drawcat, width/2, (height/2))
 
+        #render in table
+        tableGen()
 
+        displayDice(roll, roll)
+
+        pygame.display.flip()
+        pygame.time.wait(2000)
         text_on_screen('DRAW!', titleFont, red, screen, (width/2), 30)
 
         mx, my = pygame.mouse.get_pos()
