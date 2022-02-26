@@ -48,12 +48,14 @@ scoreFont = pygame.font.SysFont('rubik', 24)
 statusFont = pygame.font.SysFont('rubikbold', 96)
 
 
-# Draws text using parameters passed
+# Draws text using parameters passed 
+# (message, font to use, colour to use, surface to draw on, and coordinates to place middle of text)
 def text_on_screen(msg, font, colour, surface, x, y):
-    textobject = font.render(msg, True, colour)
-    textrect = textobject.get_rect()
-    textrect.midtop = (x,y)
-    surface.blit(textobject, textrect)
+    textobject = font.render(msg, True, colour) # Creates the text object out of the font
+    textrect = textobject.get_rect() # creates a rectangle around the text object
+    textrect.midtop = (x,y) # set coordinates of rectangle
+    surface.blit(textobject, textrect) # display on surface indicated
+
 
 # Game main menu, with start and exit buttons
 def main_menu():
@@ -133,6 +135,7 @@ def getCatPath(state):
         catPath = "assets/draw.png"
     return catPath
 
+
 # Updates score based on win/lose/draw
 def updateScore(score, status):
     if status == 0:
@@ -141,6 +144,7 @@ def updateScore(score, status):
         score = (score+1)
 
     return score
+
 
 # Displays the score on the screen
 def displayScore(score):
@@ -200,6 +204,7 @@ def gameTime(score):
         pygame.display.update()
         mainClock.tick(60)
 
+
 # checks winner based on dice inputs
 def checkWinner(roll1, roll2):
     if (roll1 > roll2): # Computer wins
@@ -254,7 +259,6 @@ def showDice(compRoll, userRoll):
     screen.blit(userRollR, ((width/2)+45, (height/2)+200))
     screen.blit(compRollR, ((width/4)+105, (height/2)+150))
     pygame.display.update()
-
 
 
 # generate rolls, next screen navigation
@@ -389,6 +393,7 @@ def winScreen(die1, die2, num, score):
         pygame.display.update()
         mainClock.tick(60)
 
+
 # screen for when user loses
 def loseScreen(die1, die2, num, score):
     score = score
@@ -461,6 +466,7 @@ def loseScreen(die1, die2, num, score):
     
         pygame.display.update()
         mainClock.tick(60)
+
 
 # screen for when computer and user dice are equal
 def drawScreen(die1, num, score):
