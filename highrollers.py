@@ -17,17 +17,19 @@ resolution = (725,725)
 # open a screen of above resolution
 screen = pygame.display.set_mode(resolution)
 
-# defining palette colours(global variables)
-backgroundC = (252, 222, 190)
-green = (101, 155, 94)
-dGreen = (73, 113, 69)
-red = (200, 70,48)
-dRed = (135, 47, 31)
-yellow = (255, 188, 66)
-black = (35, 32, 32)
-brown = (90, 53, 42)
-linen = (254, 245, 236)
-scoreYellow = (204, 145, 37)
+# defining palette colours (global variables) as dictionary
+gameColours={ 
+    'background': (252, 222, 190), 
+    'green': (101, 155, 94),
+    'dG': (73, 113, 69),
+    'red': (200, 70,48),
+    'dR' : (135, 47, 31),
+    'yellow': (255, 188, 66),
+    'dY': (204, 145, 37),
+    'black': (35, 32, 32),
+    'brown':(90, 53, 42),
+    'linen': (254, 245, 236)
+}
 
 # storing screen variable values
 width = screen.get_width()
@@ -64,8 +66,8 @@ def main_menu():
     while True:
         
         # Fill screen with designated background colour
-        screen.fill(backgroundC)
-        text_on_screen('HIGH ROLLERS', titleFont, black, screen, (width/2), 100)
+        screen.fill(gameColours['background'])
+        text_on_screen('HIGH ROLLERS', titleFont, gameColours['black'], screen, (width/2), 100)
 
         # track position of mouse
         mx, my = pygame.mouse.get_pos()
@@ -77,23 +79,23 @@ def main_menu():
         # Hover on buttons
         if playButton.collidepoint((mx, my)):
             # Rendering button darker green
-            pygame.draw.rect(screen, dGreen, playButton)
+            pygame.draw.rect(screen, gameColours['dG'], playButton)
             if click:
                 gameTime(0)
         else:
             # Rendering button green
-            pygame.draw.rect(screen, green, playButton)
-        text_on_screen('play', buttonFont, linen, screen, (width/7)+100, (height/2)+25)
+            pygame.draw.rect(screen, gameColours['green'], playButton)
+        text_on_screen('play', buttonFont, gameColours['linen'], screen, (width/7)+100, (height/2)+25)
 
         if quitButton.collidepoint((mx,my)):
             # Rendering button darker red
-            pygame.draw.rect(screen, dRed, quitButton)
+            pygame.draw.rect(screen, gameColours['dR'], quitButton)
             if click:
                 pygame.quit()
         else:
             # Rendering button light red
-            pygame.draw.rect(screen, red, quitButton)
-        text_on_screen('quit', buttonFont, linen, screen, ((width/7)+300+width/7), (height/2)+25)
+            pygame.draw.rect(screen, gameColours['red'], quitButton)
+        text_on_screen('quit', buttonFont, gameColours['linen'], screen, ((width/7)+300+width/7), (height/2)+25)
 
 
         # Loop to loog for pygame events to exit or move to next screen
@@ -117,7 +119,7 @@ def main_menu():
 # Generates the rectangle (table) across the bottom of the screen
 def tableGen():
     table = pygame.Rect(0, height-250, width, 400)
-    pygame.draw.rect(screen, brown, table)
+    pygame.draw.rect(screen, gameColours['brown'], table)
     return True
 
 
@@ -143,8 +145,8 @@ def updateScore(score, status):
 # Displays the score on the screen
 def displayScore(score):
     score = str(score)
-    text_on_screen('Score:', scoreFont, scoreYellow, screen, (width-90), 30)
-    text_on_screen(score, scoreFont, scoreYellow, screen, (width-25), 30)
+    text_on_screen('Score:', scoreFont, gameColours['dY'], screen, (width-90), 30)
+    text_on_screen(score, scoreFont, gameColours['dY'], screen, (width-25), 30)
 
 
 # Begins the "lets roll" screen of game, with button to start
@@ -156,7 +158,7 @@ def gameTime(score):
     running = True
     while running:
         # Fill screen with designated background colour
-        screen.fill(backgroundC)
+        screen.fill(gameColours['background'])
 
         # Render before-roll cat, and table
         pregame = pygame.image.load("assets/preroll.png").convert_alpha()
@@ -165,7 +167,7 @@ def gameTime(score):
         tableGen()
         pygame.display.flip() #update screen
 
-        text_on_screen('LETS ROLL!', titleFont, yellow, screen, (width/2), 30)
+        text_on_screen('LETS ROLL!', titleFont, gameColours['yellow'], screen, (width/2), 30)
         displayScore(score)
 
         # mouse position
@@ -175,13 +177,13 @@ def gameTime(score):
 
         # Hover on roll button
         if rollButton.collidepoint((mx, my)):
-            pygame.draw.rect(screen, dRed, rollButton)
+            pygame.draw.rect(screen, gameColours['dR'], rollButton)
             if click:
                 gameLogic(score)
         else:
-            pygame.draw.rect(screen, red, rollButton)
+            pygame.draw.rect(screen, gameColours['red'], rollButton)
         
-        text_on_screen('ROLL', buttonFont, linen, screen, (width/3)+115, (height-90))
+        text_on_screen('ROLL', buttonFont, gameColours['linen'], screen, (width/3)+115, (height-90))
 
         for ev in pygame.event.get():
             if ev.type == pygame.QUIT:
@@ -272,7 +274,7 @@ def gameLogic(score):
 
     while running:
         # Fill screen with designated background colour
-        screen.fill(backgroundC)
+        screen.fill(gameColours['background'])
 
 
         # render cat rolling die, and table
@@ -327,7 +329,7 @@ def winScreen(die1, die2, num, score):
 
     running = True
     while running:
-        screen.fill(backgroundC)
+        screen.fill(gameColours['background'])
 
         # get path to cat image based on win/lose/draw state passed
         catPath = getCatPath(state)
@@ -342,33 +344,33 @@ def winScreen(die1, die2, num, score):
 
         displayScore(score)
 
-        text_on_screen('WIN! :)', statusFont, green, screen, (width/2), 30)
+        text_on_screen('WIN! :)', statusFont, gameColours['green'], screen, (width/2), 30)
         
         # mouse coordinates
         mx, my = pygame.mouse.get_pos()
 
         againButton = pygame.Rect(width/7, (height-70), 225, 50)
         quitButton = pygame.Rect(width/7+300, (height-70), 225, 50)
-        pygame.draw.rect(screen, green, againButton)
-        pygame.draw.rect(screen, red, quitButton)
+        pygame.draw.rect(screen, gameColours['green'], againButton)
+        pygame.draw.rect(screen, gameColours['red'], quitButton)
 
         # hover effects (collision)
         if againButton.collidepoint((mx, my)):
-            pygame.draw.rect(screen, dGreen, againButton)
+            pygame.draw.rect(screen, gameColours['dG'], againButton)
             if click:
                 gameTime(score)
         else:
-            pygame.draw.rect(screen, green, againButton)
-        text_on_screen('replay', buttonFont, linen, screen, (width/7)+115, (height-75))
+            pygame.draw.rect(screen, gameColours['green'], againButton)
+        text_on_screen('replay', buttonFont, gameColours['linen'], screen, (width/7)+115, (height-75))
 
         if quitButton.collidepoint((mx, my)):
-            pygame.draw.rect(screen, dRed, quitButton)
+            pygame.draw.rect(screen, gameColours['dR'], quitButton)
             if click:
                 pygame.quit()
                 sys.exit()
         else:
-            pygame.draw.rect(screen, red, quitButton)
-        text_on_screen('quit', buttonFont, linen, screen, (width/7)+415, (height-75))
+            pygame.draw.rect(screen, gameColours['red'], quitButton)
+        text_on_screen('quit', buttonFont, gameColours['linen'], screen, (width/7)+415, (height-75))
 
         # event loop looking for click or escape
         for ev in pygame.event.get():
@@ -401,7 +403,7 @@ def loseScreen(die1, die2, num, score):
 
     running = True
     while running:
-        screen.fill(backgroundC)
+        screen.fill(gameColours['background'])
 
         againButton = pygame.Rect(width/7, (height-70), 225, 50)
         quitButton = pygame.Rect(width/7+300, (height-70), 225, 50)
@@ -419,28 +421,28 @@ def loseScreen(die1, die2, num, score):
 
         displayScore(score)
 
-        text_on_screen('LOSE! :(', statusFont, red, screen, (width/2), 30)
+        text_on_screen('LOSE! :(', statusFont, gameColours['red'], screen, (width/2), 30)
 
         # mouse coordinates
         mx, my = pygame.mouse.get_pos()
 
         # hover collision
         if againButton.collidepoint((mx, my)):
-            pygame.draw.rect(screen, dGreen, againButton)
+            pygame.draw.rect(screen, gameColours['dG'], againButton)
             if click:
                 gameTime(score)
         else:
-            pygame.draw.rect(screen, green, againButton)
-        text_on_screen('replay', buttonFont, linen, screen, (width/7)+115, (height-75))
+            pygame.draw.rect(screen, gameColours['green'], againButton)
+        text_on_screen('replay', buttonFont, gameColours['linen'], screen, (width/7)+115, (height-75))
 
         if quitButton.collidepoint((mx, my)):
-            pygame.draw.rect(screen, dRed, quitButton)
+            pygame.draw.rect(screen, gameColours['dR'], quitButton)
             if click:
                 pygame.quit()
                 sys.exit()
         else:
-            pygame.draw.rect(screen, red, quitButton)
-        text_on_screen('quit', buttonFont, linen, screen, (width/7)+415, (height-75))
+            pygame.draw.rect(screen, gameColours['red'], quitButton)
+        text_on_screen('quit', buttonFont, gameColours['linen'], screen, (width/7)+415, (height-75))
 
         # event loop looking for click or escape
         for ev in pygame.event.get():
@@ -473,7 +475,7 @@ def drawScreen(die1, num, score):
 
     running = True
     while running:
-        screen.fill(backgroundC)
+        screen.fill(gameColours['background'])
 
         againButton = pygame.Rect(width/7, (height-70), 225, 50)
         quitButton = pygame.Rect(width/7+300, (height-70), 225, 50)
@@ -492,25 +494,25 @@ def drawScreen(die1, num, score):
 
         displayScore(score)
 
-        text_on_screen('DRAW!', statusFont, yellow, screen, (width/2), 30)
+        text_on_screen('DRAW!', statusFont, gameColours['yellow'], screen, (width/2), 30)
         mx, my = pygame.mouse.get_pos()
 
         if againButton.collidepoint((mx, my)):
-            pygame.draw.rect(screen, dGreen, againButton)
+            pygame.draw.rect(screen, gameColours['dG'], againButton)
             if click:
                 gameTime(score)
         else:
-            pygame.draw.rect(screen, green, againButton)
-        text_on_screen('replay', buttonFont, linen, screen, (width/7)+115, (height-75))
+            pygame.draw.rect(screen, gameColours['green'], againButton)
+        text_on_screen('replay', buttonFont, gameColours['linen'], screen, (width/7)+115, (height-75))
 
         if quitButton.collidepoint((mx, my)):
-            pygame.draw.rect(screen, dRed, quitButton)
+            pygame.draw.rect(screen, gameColours['dR'], quitButton)
             if click:
                 pygame.quit()
                 sys.exit()
         else:
-            pygame.draw.rect(screen, red, quitButton)
-        text_on_screen('quit', buttonFont, linen, screen, (width/7)+415, (height-75))
+            pygame.draw.rect(screen, gameColours['red'], quitButton)
+        text_on_screen('quit', buttonFont, gameColours['linen'], screen, (width/7)+415, (height-75))
 
 
         for ev in pygame.event.get():
