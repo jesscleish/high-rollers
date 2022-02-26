@@ -142,3 +142,21 @@ def testScoreDraw():
     score = 50
     score = highrollers.updateScore(score, 2)
     assert score == 50
+
+# Test all palette colours defined correctly
+def testPalette():
+    assert highrollers.backgroundC == (252, 222, 190)
+    assert highrollers.green == (101, 155, 94)
+    assert highrollers.dGreen == (73, 113, 69)
+    assert highrollers.red == (200, 70,48)
+    assert highrollers.dRed == (135, 47, 31)
+    assert highrollers.yellow == (255, 188, 66)
+    assert highrollers.black == (35, 32, 32)
+    assert highrollers.brown == (90, 53, 42)
+    assert highrollers.linen == (254, 245, 236)
+    assert highrollers.scoreYellow == (204, 145, 37)
+
+# Test table generation function is successful
+def testTable():
+    status = highrollers.tableGen()
+    assert status == True

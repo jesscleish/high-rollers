@@ -53,8 +53,8 @@ def text_on_screen(msg, font, colour, surface, x, y):
     textrect.midtop = (x,y)
     surface.blit(textobject, textrect)
 
+# Game main menu, with start and exit buttons
 def main_menu():
-
     pygame.display.set_caption("High Rollers")
 
     letsplay = pygame.mixer.Sound("sounds/lpag.mp3")
@@ -67,8 +67,10 @@ def main_menu():
         screen.fill(backgroundC)
         text_on_screen('HIGH ROLLERS', titleFont, black, screen, (width/2), 100)
 
+        # track position of mouse
         mx, my = pygame.mouse.get_pos()
 
+        # Generate play/quit buttons
         playButton = pygame.Rect(width/7, (height/2), 200, 100)
         quitButton = pygame.Rect(((width/7)+200+width/7), (height/2), 200, 100)
 
@@ -93,7 +95,8 @@ def main_menu():
             pygame.draw.rect(screen, red, quitButton)
         text_on_screen('quit', buttonFont, linen, screen, ((width/7)+300+width/7), (height/2)+25)
 
-     
+
+        # Loop to loog for pygame events to exit or move to next screen
         for ev in pygame.event.get():
             if ev.type == pygame.QUIT:
                 pygame.quit()
@@ -109,11 +112,13 @@ def main_menu():
 
         pygame.display.update()
         mainClock.tick(60)
-       
-# Generates the rectangle across the bottom of the screen
+
+
+# Generates the rectangle (table) across the bottom of the screen
 def tableGen():
     table = pygame.Rect(0, height-250, width, 400)
     pygame.draw.rect(screen, brown, table)
+    return True
 
 
 # get appropriate cat path to display in outcome screen
@@ -126,6 +131,7 @@ def getCatPath(state):
         catPath = "assets/draw.png"
     return catPath
 
+# Updates score based on win/lose/draw
 def updateScore(score, status):
     if status == 0:
         score = (score-1)
@@ -134,30 +140,35 @@ def updateScore(score, status):
 
     return score
 
+# Displays the score on the screen
 def displayScore(score):
     score = str(score)
     text_on_screen('Score:', scoreFont, scoreYellow, screen, (width-90), 30)
     text_on_screen(score, scoreFont, scoreYellow, screen, (width-25), 30)
 
 
+# Begins the "lets roll" screen of game, with button to start
 def gameTime(score):
     score = score
     click = False
+
+
     running = True
     while running:
         # Fill screen with designated background colour
         screen.fill(backgroundC)
 
-        #render in mr catto and table here
+        # Render before-roll cat, and table
         pregame = pygame.image.load("assets/preroll.png").convert_alpha()
         pregame = pygame.transform.scale(pregame, (400, 450))
         screen.blit(pregame, ((width/4),(height/2)-325))
         tableGen()
-        pygame.display.flip()
+        pygame.display.flip() #update screen
 
         text_on_screen('LETS ROLL!', titleFont, yellow, screen, (width/2), 30)
         displayScore(score)
 
+        # mouse position
         mx, my = pygame.mouse.get_pos()
 
         rollButton = pygame.Rect(width/3, (height-100), 225, 70)
@@ -187,7 +198,7 @@ def gameTime(score):
         pygame.display.update()
         mainClock.tick(60)
 
-
+# checks winner based on dice inputs
 def checkWinner(roll1, roll2):
     if (roll1 > roll2): # Computer wins
         return 0
@@ -199,6 +210,7 @@ def checkWinner(roll1, roll2):
         return 2
 
 
+# Obtains image path for computer and user rolled dice
 def getDice(die1, die2):
     if die1 == 1:
         compRoll = "assets/b1.png"
@@ -229,6 +241,8 @@ def getDice(die1, die2):
 
     return (compRoll, userRoll)
 
+
+# Displays dice based on img path
 def showDice(compRoll, userRoll):
     # resize dice
     userRollR = pygame.transform.scale((pygame.image.load(userRoll).convert_alpha()), (80, 80))
@@ -248,6 +262,7 @@ def gameLogic(score):
     die1 = (secrets.randbelow(5)+1) #computer roll
     die2 = (secrets.randbelow(5)+1) #user roll
 
+    # Create event for after 2 seconds to move to win/loss/draw screen
     dust_clear_event = pygame.USEREVENT + 1
     pygame.time.set_timer(dust_clear_event, 2000)
     
@@ -260,7 +275,7 @@ def gameLogic(score):
         screen.fill(backgroundC)
 
 
-        # render rolly cat and table
+        # render cat rolling die, and table
         rollcat = pygame.image.load("assets/rollcat.png").convert_alpha()
         rollcat = pygame.transform.scale(rollcat, (400, 450))
         screen.blit(rollcat, ((width/4),(height/2)-325))
@@ -268,12 +283,12 @@ def gameLogic(score):
         
         displayScore(score)
 
-        # show dust for rolling and make it wiggle if i can
+        # show dust for rolling
         dust = pygame.image.load("assets/dust.png").convert_alpha()
         dust = pygame.transform.scale(dust, (300, 300))
         screen.blit(dust, ((width/4)+5, (height/2)+50))
 
-        pygame.display.flip()
+        pygame.display.flip() # update display
 
         for ev in pygame.event.get():
             if ev.type == pygame.QUIT:
@@ -297,6 +312,7 @@ def gameLogic(score):
     mainClock.tick(60)
 
 
+# user won
 def winScreen(die1, die2, num, score):
     score = score
     computer = die1
@@ -313,6 +329,7 @@ def winScreen(die1, die2, num, score):
     while running:
         screen.fill(backgroundC)
 
+        # get path to cat image based on win/lose/draw state passed
         catPath = getCatPath(state)
         cat = pygame.transform.scale(pygame.image.load(catPath).convert_alpha(), (400, 450))
         #display cat
@@ -320,13 +337,14 @@ def winScreen(die1, die2, num, score):
         
         #display table and dice
         tableGen()
-        cRoll, uRoll = getDice(computer, user)
+        cRoll, uRoll = getDice(computer, user) # get dice img paths
         showDice(cRoll, uRoll)
 
         displayScore(score)
 
         text_on_screen('WIN! :)', statusFont, green, screen, (width/2), 30)
         
+        # mouse coordinates
         mx, my = pygame.mouse.get_pos()
 
         againButton = pygame.Rect(width/7, (height-70), 225, 50)
@@ -334,7 +352,7 @@ def winScreen(die1, die2, num, score):
         pygame.draw.rect(screen, green, againButton)
         pygame.draw.rect(screen, red, quitButton)
 
-        
+        # hover effects (collision)
         if againButton.collidepoint((mx, my)):
             pygame.draw.rect(screen, dGreen, againButton)
             if click:
@@ -352,6 +370,7 @@ def winScreen(die1, die2, num, score):
             pygame.draw.rect(screen, red, quitButton)
         text_on_screen('quit', buttonFont, linen, screen, (width/7)+415, (height-75))
 
+        # event loop looking for click or escape
         for ev in pygame.event.get():
             if ev.type == pygame.QUIT:
                 pygame.quit()
@@ -368,7 +387,7 @@ def winScreen(die1, die2, num, score):
         pygame.display.update()
         mainClock.tick(60)
 
-
+# screen for when user loses
 def loseScreen(die1, die2, num, score):
     score = score
     click = False
@@ -387,6 +406,7 @@ def loseScreen(die1, die2, num, score):
         againButton = pygame.Rect(width/7, (height-70), 225, 50)
         quitButton = pygame.Rect(width/7+300, (height-70), 225, 50)
 
+        # get path to cat image based on win/lose/draw state passed
         catPath = getCatPath(state)
         cat = pygame.transform.scale(pygame.image.load(catPath).convert_alpha(), (400, 450))
         #display cat
@@ -401,8 +421,10 @@ def loseScreen(die1, die2, num, score):
 
         text_on_screen('LOSE! :(', statusFont, red, screen, (width/2), 30)
 
+        # mouse coordinates
         mx, my = pygame.mouse.get_pos()
 
+        # hover collision
         if againButton.collidepoint((mx, my)):
             pygame.draw.rect(screen, dGreen, againButton)
             if click:
@@ -420,6 +442,7 @@ def loseScreen(die1, die2, num, score):
             pygame.draw.rect(screen, red, quitButton)
         text_on_screen('quit', buttonFont, linen, screen, (width/7)+415, (height-75))
 
+        # event loop looking for click or escape
         for ev in pygame.event.get():
             if ev.type == pygame.QUIT:
                 pygame.quit()
@@ -437,15 +460,17 @@ def loseScreen(die1, die2, num, score):
         pygame.display.update()
         mainClock.tick(60)
 
+# screen for when computer and user dice are equal
 def drawScreen(die1, num, score):
     click = False
     roll = die1
     state = num
     score = score
     
-
+    # play "draw" sound effect
     drawsound = pygame.mixer.Sound("sounds/angrycat.mp3")
     pygame.mixer.Sound.play(drawsound)
+
     running = True
     while running:
         screen.fill(backgroundC)
@@ -453,9 +478,10 @@ def drawScreen(die1, num, score):
         againButton = pygame.Rect(width/7, (height-70), 225, 50)
         quitButton = pygame.Rect(width/7+300, (height-70), 225, 50)
 
-        #render in mr catto, dice, and table here
+        # get appropriate cat based on game status (win/loss/draw)
         catPath = getCatPath(state)
         cat = pygame.transform.scale(pygame.image.load(catPath).convert_alpha(), (400, 450))
+        # Display cat on screeen
         screen.blit(cat, ((width/4),(height/2)-325))
 
         #render in table
@@ -466,7 +492,7 @@ def drawScreen(die1, num, score):
 
         displayScore(score)
 
-        text_on_screen('DRAW!', statusFont, red, screen, (width/2), 30)
+        text_on_screen('DRAW!', statusFont, yellow, screen, (width/2), 30)
         mx, my = pygame.mouse.get_pos()
 
         if againButton.collidepoint((mx, my)):
@@ -485,6 +511,7 @@ def drawScreen(die1, num, score):
         else:
             pygame.draw.rect(screen, red, quitButton)
         text_on_screen('quit', buttonFont, linen, screen, (width/7)+415, (height-75))
+
 
         for ev in pygame.event.get():
             if ev.type == pygame.QUIT:
