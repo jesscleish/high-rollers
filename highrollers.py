@@ -105,10 +105,6 @@ def main_menu():
             if ev.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-            if ev.type == KEYDOWN:
-                if ev.key == K_ESCAPE:
-                    pygame.quit()
-                    sys.exit()
         
             if ev.type == MOUSEBUTTONDOWN:
                 if ev.button == 1:
@@ -193,9 +189,6 @@ def gameTime(score):
             if ev.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-            if ev.type == KEYDOWN:
-                if ev.key == K_ESCAPE:
-                    running = False
             
             if ev.type == MOUSEBUTTONDOWN:
                 if ev.button == 1:
@@ -300,9 +293,7 @@ def gameLogic(score):
             if ev.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-            if ev.type == KEYDOWN:
-                if ev.key == K_ESCAPE:
-                    running = False
+            
             if ev.type == dust_clear_event:
                 # Once dust can clear, navigate to next screen for victory/loss/draw
                 winner = checkWinner(die1, die2)
@@ -382,10 +373,6 @@ def winScreen(die1, die2, num, score):
                 pygame.quit()
                 sys.exit()
 
-            if ev.type == KEYDOWN:
-                if ev.key == K_ESCAPE:
-                    running = False
-
             if ev.type == MOUSEBUTTONDOWN:
                 if ev.button == 1:
                     click = True
@@ -455,10 +442,6 @@ def loseScreen(die1, die2, num, score):
                 pygame.quit()
                 sys.exit()
 
-            if ev.type == KEYDOWN:
-                if ev.key == K_ESCAPE:
-                    running = False
-
             if ev.type == MOUSEBUTTONDOWN:
                 if ev.button == 1:
                     click = True
@@ -526,9 +509,6 @@ def drawScreen(die1, num, score):
                 pygame.quit()
                 sys.exit()
 
-            if ev.type == KEYDOWN:
-                if ev.key == K_ESCAPE:
-                    running = False
 
             if ev.type == MOUSEBUTTONDOWN:
                 if ev.button == 1:
