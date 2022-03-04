@@ -241,7 +241,6 @@ def getDice(die1, die2):
 
     return (compRoll, userRoll)
 
-
 # Displays dice based on img path
 def showDice(compRoll, userRoll):
     # resize dice
