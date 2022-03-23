@@ -118,7 +118,6 @@ def main_menu():
 def tableGen():
     table = pygame.Rect(0, height-250, width, 400)
     pygame.draw.rect(screen, gameColours['brown'], table)
-    return True
 
 
 # get appropriate cat path to display in outcome screen
