@@ -98,20 +98,20 @@ def gameLogic(score):
 
     displayScore(score)
 
-    status = checkWinner(die1, die2)
+    winner = checkWinner(die1, die2)
     score = updateScore(score, status)
 
-    if status == 0:
-        loseScreen(die1, die2, status, score)
-    elif status == 1:
-        winScreen(die1, die2, status, score)
+    if winner == 0:
+        loseScreen(die1, die2, winner, score)
+    elif winner == 1:
+        winScreen(die1, die2, winner, score)
     else:
-        drawScreen(die1, status, score)
+        drawScreen(die1, winner, score)
 
 
 
 # user won
-def winScreen(die1, die2, status, score):
+def winScreen(die1, die2, num, score):
     score = score
 
     displayScore(score)
@@ -120,7 +120,7 @@ def winScreen(die1, die2, status, score):
 
 
 # screen for when user loses
-def loseScreen(die1, die2, status, score):
+def loseScreen(die1, die2, num, score):
     score = score
 
     displayScore(score)
@@ -129,7 +129,7 @@ def loseScreen(die1, die2, status, score):
   
 
 # screen for when computer and user dice are equal
-def drawScreen(die1, status, score):
+def drawScreen(die1, num, score):
    
     score = score
 

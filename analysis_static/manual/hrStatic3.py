@@ -88,7 +88,7 @@ def gameTime(score):
 
 
 # user won
-def winScreen(die1, die2, status, score):
+def winScreen(die1, die2, num, score):
     
     # mouse coordinates
     mx, my = pygame.mouse.get_pos()
@@ -112,7 +112,7 @@ def winScreen(die1, die2, status, score):
 
 
 # screen for when user loses
-def loseScreen(die1, die2, status, score):
+def loseScreen(die1, die2, num, score):
  
     againButton = pygame.Rect(width/7, (height-70), 225, 50)
     quitButton = pygame.Rect(width/7+300, (height-70), 225, 50)
@@ -134,7 +134,7 @@ def loseScreen(die1, die2, status, score):
 
 
 # screen for when computer and user dice are equal
-def drawScreen(die1, status, score):
+def drawScreen(die1, num, score):
     
         againButton = pygame.Rect(width/7, (height-70), 225, 50)
         quitButton = pygame.Rect(width/7+300, (height-70), 225, 50)

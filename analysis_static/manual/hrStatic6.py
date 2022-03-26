@@ -62,24 +62,24 @@ def gameLogic(score):
 
     die2 = (secrets.randbelow(5)+1) #user roll
 
-    status = checkWinner(die1, die2)
+    winner = checkWinner(die1, die2)
     if status == 0:
-        loseScreen(die1, die2, status, score)
-    elif status == 1:
-        winScreen(die1, die2, status, score)
+        loseScreen(die1, die2, winner, score)
+    elif winner == 1:
+        winScreen(die1, die2, winner, score)
     else:
-        drawScreen(die1, status, score)
+        drawScreen(die1, winner, score)
 
 
 # user won
-def winScreen(die1, die2, status, score):
+def winScreen(die1, die2, num, score):
     user = die2
 
     cRoll, uRoll = getDice(computer, user) # get dice img paths
 
 
 # screen for when user loses
-def loseScreen(die1, die2, status, score):
+def loseScreen(die1, die2, num, score):
     
     user = die2
 

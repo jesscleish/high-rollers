@@ -141,12 +141,12 @@ def gameTime(score):
         mainClock.tick(60)
 
 
-def checkWinner(roll1, roll2):
-    if (roll1 > roll2):
+def checkWinner(die1, die2):
+    if (die1 > die2):
         return 0
-    elif(roll1 < roll2):
+    elif(die1 < die2):
         return 1
-    elif(roll1 == roll2):
+    elif(die1 == die2):
         return 2
 
 
@@ -226,8 +226,6 @@ def gameLogic(score):
 
 def winScreen(die1, die2, state, score):
     score = score
-    computer = die1
-    user = die2
     state = state
     click = False
 
@@ -240,7 +238,7 @@ def winScreen(die1, die2, state, score):
         cat = pygame.transform.scale(pygame.image.load(catPath).convert_alpha(), (400, 450))
         screen.blit(cat, ((width/4),(height/2)-325))
         tableGen()
-        cRoll, uRoll = getDice(computer, user)
+        cRoll, uRoll = getDice(die1, die2)
         showDice(cRoll, uRoll)
         displayScore(score)
         text_on_screen('WIN! :)', statusFont, gameColours['green'], screen, (width/2), 30)
@@ -277,8 +275,6 @@ def winScreen(die1, die2, state, score):
 def loseScreen(die1, die2, state, score):
     score = score
     click = False
-    computer = die1
-    user = die2
     state = state
     losesound = pygame.mixer.Sound("sounds/losetrombone.wav")
     pygame.mixer.Sound.play(losesound)
@@ -291,7 +287,7 @@ def loseScreen(die1, die2, state, score):
         cat = pygame.transform.scale(pygame.image.load(catPath).convert_alpha(), (400, 450))
         screen.blit(cat, ((width/4),(height/2)-325))
         tableGen()
-        cRoll, uRoll = getDice(computer, user)
+        cRoll, uRoll = getDice(die1, die2)
         showDice(cRoll, uRoll)
         displayScore(score)
         text_on_screen('LOSE! :(', statusFont, gameColours['red'], screen, (width/2), 30)
@@ -324,7 +320,6 @@ def loseScreen(die1, die2, state, score):
 
 def drawScreen(die1, state, score):
     click = False
-    roll = die1
     state = state
     score = score
     drawsound = pygame.mixer.Sound("sounds/angrycat.mp3")
@@ -338,7 +333,7 @@ def drawScreen(die1, state, score):
         cat = pygame.transform.scale(pygame.image.load(catPath).convert_alpha(), (400, 450))
         screen.blit(cat, ((width/4),(height/2)-325))
         tableGen()
-        cRoll, uRoll = getDice(roll, roll)
+        cRoll, uRoll = getDice(die1, die1)
         showDice(cRoll, uRoll)
         displayScore(score)
         text_on_screen('DRAW!', statusFont, gameColours['yellow'], screen, (width/2), 30)

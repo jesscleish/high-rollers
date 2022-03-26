@@ -1,8 +1,6 @@
-# Python Program to Print Lines
-# Containing Given String in File
+# Assignment 2 Highrollers Program Slicer
+# Jessica Leishman
   
-# entering try block
-
 f = open("highrollers.txt", "r")
 
 variable = input("Enter the variable to parse for: ")
@@ -20,8 +18,19 @@ for line in lines:
         line = "\n" + line
 
     if variable in line:
-        #if if/elif/else is in the line as well as the variable, include the next line as well if variable not in it
-        if "if" in line or "elif" in line or "else" in line:
+        #check if the line prior is not the first line in the program
+        if (index-1) >= 0:
+
+            # check if the line prior is an if, elif, or else. If it is, need to add it
+            if "else" in lines[index-1]:
+                slices.insert(index, lines[index-1])
+            elif "if" in lines[index-1] and variable not in lines[index-1]:
+                slices.insert(index, lines[index-1])
+            elif "elif" in lines[index-1] and variable not in lines[index-1]:
+                slices.insert(index, lines[index-1])
+
+        #if if/elif is in the line as well as the variable, include the next line as well if variable not in it
+        if "if" in line or "elif" in line:
             slices.insert(index, line)
 
             #add next line to slices (it wont be auto included and skipped in next pass, really only works for return values)
@@ -41,11 +50,8 @@ f.close()
 if len(slices)==0:
     print("\nCould not slice on variable: " + variable )
 else:
-
-    # displaying the lines 
-    # containing given string
     lineLen = len(slices)
-    print("\n Program slice on variable:  " + variable + "\n")
+    print("Program slice on variable:  " + variable + "\n")
     for i in range(lineLen):
         print(end=slices[i])
     print()

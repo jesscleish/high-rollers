@@ -26,12 +26,12 @@ height = screen.get_height()
 # tableGen() not affected by winner/state/num variable
 
 # get appropriate cat path to display in outcome screen
-def getCatPath(status):
-    if status == 0:
+def getCatPath(state):
+    if state == 0:
         catPath = "assets/wincat.png"
-    elif status == 1:
+    elif state == 1:
         catPath = "assets/losecat.png"
-    elif status == 2:
+    elif state == 2:
         catPath = "assets/draw.png"
 
 
@@ -72,21 +72,21 @@ def gameLogic(score):
     die1 = (secrets.randbelow(5)+1) #computer roll
     die2 = (secrets.randbelow(5)+1) #user roll
 
-    status = checkWinner(die1, die2)
-    score = updateScore(score, status)
-    if status == 0:
-        loseScreen(die1, die2, status, score)
-    elif status == 1:
-        winScreen(die1, die2, status, score)
+    winner = checkWinner(die1, die2)
+    score = updateScore(score, winner)
+    if winner == 0:
+        loseScreen(die1, die2, winner, score)
+    elif winner == 1:
+        winScreen(die1, die2, winner, score)
     else:
-        drawScreen(die1, status, score)
+        drawScreen(die1, winner, score)
 
 
 
 # user won
-def winScreen(die1, die2, status, score):
+def winScreen(die1, die2, num, score):
 
-    status = status
+    status = num
 
     catPath = getCatPath(status)
     cat = pygame.transform.scale(pygame.image.load(catPath).convert_alpha(), (400, 450))
@@ -95,9 +95,9 @@ def winScreen(die1, die2, status, score):
 
 
 # screen for when user loses
-def loseScreen(die1, die2, status, score):
+def loseScreen(die1, die2, num, score):
    
-    status = status
+    status = num
 
     # get path to cat image based on win/lose/draw state passed
     catPath = getCatPath(status)
@@ -106,9 +106,9 @@ def loseScreen(die1, die2, status, score):
 
 
 # screen for when computer and user dice are equal
-def drawScreen(die1, status, score):
+def drawScreen(die1, num, score):
    
-    status = status
+    status = num
 
     # get appropriate cat based on game status (win/loss/draw)
     catPath = getCatPath(status)
