@@ -1,11 +1,14 @@
 from matplotlib.pyplot import draw
 import pygame
+import sys
 import secrets
 
 from pygame.locals import *
 pygame.init()
+pygame.font.init()
+pygame.mixer.init()
 
-# screen setup not required/affected by die1/computer roll variable
+# set screen re# screen setup not required/affected by die1/computer roll variable
 
 # text_on_screen() not affected by die1/computer roll variable
 
@@ -21,7 +24,6 @@ pygame.init()
 
 # gameTime() not affected by die1/computer roll variable
 
-
 # checks winner based on dice inputs
 def checkWinner(roll1, roll2):
     if (roll1 > roll2): # Computer wins
@@ -36,54 +38,50 @@ def checkWinner(roll1, roll2):
 
 # Obtains image path for computer and user rolled dice
 def getDice(die1, die2):
-    if die1 == 1:
-        compRoll = "assets/b1.png"
-    elif die1 == 2:
-        compRoll = "assets/b2.png"
-    elif die1 == 3:
-        compRoll = "assets/b3.png"
-    elif die1 == 4:
-        compRoll = "assets/b4.png"
-    elif die1 == 5:
-        compRoll = "assets/b5.png"
-    elif die1 == 6:
-        compRoll = "assets/b6.png"
+                
+    if die2 == 1:
+        userRoll = "assets/r1.png"
+    elif die2 == 2:
+        userRoll = "assets/r2.png"
+    elif die2 == 3:
+        userRoll = "assets/r3.png"
+    elif die2 == 4:
+        userRoll = "assets/r4.png"
+    elif die2 == 5:
+        userRoll = "assets/r5.png"
+    elif die2 == 6:
+        userRoll = "assets/r6.png"
 
-    return (compRoll, userRoll) #userRoll no longer variable used, but still included in the line to preserve source code
+    return (compRoll, userRoll)
 
 # showDice() not affected by die1/computer roll variable
+
 
 # generate rolls, next screen navigation
 def gameLogic(score):
 
-    die1 = (secrets.randbelow(5)+1) #computer roll
+    die2 = (secrets.randbelow(5)+1) #user roll
 
-    winner = checkWinner(die1, die2)
-    if winner == 0:
-        loseScreen(die1, die2, winner, score)
-    elif winner == 1:
-        winScreen(die1, die2, winner, score)
+    status = checkWinner(die1, die2)
+    if status == 0:
+        loseScreen(die1, die2, status, score)
+    elif status == 1:
+        winScreen(die1, die2, status, score)
     else:
-        drawScreen(die1, winner, score)
+        drawScreen(die1, status, score)
 
 
 # user won
-def winScreen(die1, die2, num, score):
-    computer = die1
+def winScreen(die1, die2, status, score):
+    user = die2
 
     cRoll, uRoll = getDice(computer, user) # get dice img paths
 
+
 # screen for when user loses
-def loseScreen(die1, die2, num, score):
+def loseScreen(die1, die2, status, score):
     
-    computer = die1
+    user = die2
 
     cRoll, uRoll = getDice(computer, user)
         
-
-# screen for when computer and user dice are equal
-def drawScreen(die1, num, score):
-  
-    roll = die1
-
-    cRoll, uRoll = getDice(roll, roll)

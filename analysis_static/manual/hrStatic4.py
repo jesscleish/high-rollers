@@ -24,12 +24,12 @@ height = screen.get_height()
 
 
 # get appropriate cat path to display in outcome screen
-def getCatPath(state):
-    if state == 0:
+def getCatPath(status):
+    if status == 0:
         catPath = "assets/wincat.png"
-    elif state == 1:
+    elif status == 1:
         catPath = "assets/losecat.png"
-    elif state == 2:
+    elif status == 2:
         catPath = "assets/draw.png"
     return catPath
 
@@ -48,8 +48,8 @@ def getCatPath(state):
 # gameLogic() not affected by catPath variable
 
 # user won
-def winScreen(die1, die2, num, score):
-    state = num
+def winScreen(die1, die2, status, score):
+    status = status
 
     # get path to cat image based on win/lose/draw state passed
     catPath = getCatPath(state)
@@ -59,10 +59,10 @@ def winScreen(die1, die2, num, score):
 
 
 # screen for when user loses
-def loseScreen(die1, die2, num, score):
-    state = num
+def loseScreen(die1, die2, status, score):
+    status = status
     # get path to cat image based on win/lose/draw state passed
-    catPath = getCatPath(state)
+    catPath = getCatPath(status)
     cat = pygame.transform.scale(pygame.image.load(catPath).convert_alpha(), (400, 450))
     #display cat
     screen.blit(cat, ((width/4),(height/2)-325))
@@ -70,12 +70,12 @@ def loseScreen(die1, die2, num, score):
 
 
 # screen for when computer and user dice are equal
-def drawScreen(die1, num, score):
+def drawScreen(die1, status, score):
   
-    state = num
+    status = status
 
     # get appropriate cat based on game status (win/loss/draw)
-    catPath = getCatPath(state)
+    catPath = getCatPath(status)
     cat = pygame.transform.scale(pygame.image.load(catPath).convert_alpha(), (400, 450))
     # Display cat on screeen
     screen.blit(cat, ((width/4),(height/2)-325))
