@@ -34,5 +34,5 @@ Then, `pytest testsuite.py` from within the game’s directory.
 ## Performing Dynamic Analysis
 The dynamic analysis version of the source code is contained within [this folder](https://github.com/jessica-leishman/high-rollers/tree/f880993377f5c29a2ba2c379136e5dcae66aee1f/analysis_dynamic). 
 
-Ensure the above ["How to Run"](linktosection) instructions have been done.  
+Ensure the above ["How to Run"](https://github.com/jessica-leishman/high-rollers/blob/main/README.md#how-to-run) instructions have been done.  
 To run the analysis version, run hrDDriver or through command line with `python hrDDriver.py`.
